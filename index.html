@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
+
     <title>Algebra 1 Tutorial: Weekly Course Flow</title>
 
     <style>
@@ -21,10 +23,15 @@
             --border: #d6e6ef;
             --white: #ffffff;
             --muted: #5f6c76;
+            --caption-bg: #17232d;
         }
 
         * {
             box-sizing: border-box;
+        }
+
+        html {
+            background: #dceaf2;
         }
 
         body {
@@ -35,13 +42,11 @@
             font-family: Arial, sans-serif;
         }
 
-        button,
-        select {
+        button {
             font: inherit;
         }
 
-        button:focus-visible,
-        select:focus-visible {
+        button:focus-visible {
             outline: 4px solid var(--yellow);
             outline-offset: 3px;
         }
@@ -171,19 +176,19 @@
 
         .lesson-card {
             padding: 34px;
-            border-radius: 18px;
-            border-left: 9px solid var(--blue);
             background: var(--light-blue);
+            border-left: 9px solid var(--blue);
+            border-radius: 18px;
         }
 
         .lesson-card.green {
-            border-left-color: var(--green);
             background: var(--light-green);
+            border-left-color: var(--green);
         }
 
         .lesson-card.yellow {
-            border-left-color: var(--yellow);
             background: var(--light-yellow);
+            border-left-color: var(--yellow);
         }
 
         .step-number {
@@ -243,42 +248,11 @@
             line-height: 1.35;
         }
 
-        .flow-arrow {
-            margin: 0;
-            color: var(--blue);
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
-
         .two-column {
             display: grid;
             grid-template-columns: 1.1fr 0.9fr;
             gap: 26px;
             align-items: stretch;
-        }
-
-        .checklist {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
-
-        .checklist li {
-            position: relative;
-            margin: 14px 0;
-            padding-left: 42px;
-            font-size: clamp(1.15rem, 2.4vw, 1.65rem);
-            line-height: 1.4;
-        }
-
-        .checklist li::before {
-            content: "✓";
-            position: absolute;
-            top: 0;
-            left: 0;
-            color: var(--green);
-            font-size: 1.45em;
-            font-weight: bold;
         }
 
         .closing-grid {
@@ -305,9 +279,13 @@
             align-items: center;
             justify-content: center;
             padding: 16px 28px;
-            background: #17232d;
+            background: var(--caption-bg);
             color: var(--white);
             border-top: 5px solid var(--blue);
+        }
+
+        .caption-area[hidden] {
+            display: none;
         }
 
         #captionText {
@@ -355,27 +333,6 @@
             transform: none;
         }
 
-        .voice-control {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-left: 10px;
-        }
-
-        .voice-control label {
-            color: var(--navy);
-            font-weight: bold;
-        }
-
-        select {
-            max-width: 250px;
-            padding: 10px;
-            border: 2px solid var(--navy);
-            border-radius: 8px;
-            background: var(--white);
-            color: var(--text);
-        }
-
         .status {
             min-width: 110px;
             color: var(--muted);
@@ -404,7 +361,7 @@
 
         @media (max-width: 820px) {
             .stage {
-                min-height: 650px;
+                min-height: 680px;
             }
 
             .slide {
@@ -412,7 +369,7 @@
             }
 
             .hero {
-                min-height: 480px;
+                min-height: 500px;
                 padding: 34px 22px;
             }
 
@@ -428,16 +385,6 @@
 
             .flow-item {
                 min-height: auto;
-            }
-
-            .voice-control {
-                width: 100%;
-                justify-content: center;
-                margin-left: 0;
-            }
-
-            select {
-                width: min(320px, 70vw);
             }
         }
 
@@ -457,7 +404,12 @@
     <main class="app">
         <header class="topbar">
             <p class="brand">Algebra 1 Student Tutorial</p>
-            <p class="slide-counter" id="slideCounter" aria-live="polite">
+
+            <p
+                class="slide-counter"
+                id="slideCounter"
+                aria-live="polite"
+            >
                 Slide 1 of 7
             </p>
         </header>
@@ -487,7 +439,10 @@
 
                     <h2>Complete the module from top to bottom.</h2>
 
-                    <div class="weekly-flow" aria-label="Weekly course sequence">
+                    <div
+                        class="weekly-flow"
+                        aria-label="Weekly course sequence"
+                    >
                         <div class="flow-item">
                             <strong>Learn It!</strong>
                             <span>Learn the new skill.</span>
@@ -677,15 +632,11 @@
                 Hide Captions
             </button>
 
-            <div class="voice-control">
-                <label for="voiceSelect">Voice:</label>
-
-                <select id="voiceSelect" aria-label="Select narration voice">
-                    <option value="">Default browser voice</option>
-                </select>
-            </div>
-
-            <span class="status" id="statusText" aria-live="polite">
+            <span
+                class="status"
+                id="statusText"
+                aria-live="polite"
+            >
                 Ready
             </span>
         </nav>
@@ -701,8 +652,10 @@
         "use strict";
 
         /*
-         * Each slide has one narration segment.
-         * The next slide begins after the browser finishes speaking.
+         * Narration for each slide.
+         *
+         * The tutorial uses one automatically selected English voice.
+         * Students do not see or control the voice selection.
          */
         const tutorialSlides = [
             {
@@ -713,59 +666,107 @@
             {
                 narration:
                     "Each week follows a similar pattern, so you will always know what to expect. " +
-                    "Complete the Canvas module from top to bottom and follow the items in order."
+                    "Complete the Canvas module from top to bottom, and follow the items in order."
             },
             {
                 narration:
                     "Begin with the Learn It page. " +
-                    "Read the explanations, study the examples, take notes, and use the learning resources provided."
+                    "Read the explanations, study the examples, take notes, " +
+                    "and use the learning resources provided."
             },
             {
                 narration:
-                    "Next, complete the Practice It assignments, including any IXL activities " +
+                    "Next, complete the Practice It assignments, including any I X L activities " +
                     "your teacher has added to the weekly Canvas module."
             },
             {
                 narration:
-                    "Then use the Self-Check and Extra Practice page to identify what you understand " +
+                    "Then use the Self-Check and Extra Practice page to identify what you understand, " +
                     "and what you may need to review. " +
-                    "Schedule a Teacher Check-In whenever you have questions or need additional support."
+                    "Schedule a Teacher Check-In whenever you have questions, " +
+                    "or need additional support."
             },
             {
                 narration:
-                    "Finish the week with the Prove It assignment so you can demonstrate what you learned. " +
+                    "Finish the week with the Prove It assignment, " +
+                    "so you can demonstrate what you learned. " +
                     "At the end of some units, you will also complete a larger Unit Assessment."
             },
             {
                 narration:
                     "Use the same successful routine each week. " +
-                    "Read carefully, work through the module in order, and contact your teacher whenever you need help."
+                    "Read carefully, work through the module in order, " +
+                    "and contact your teacher whenever you need help."
             }
         ];
 
-        const slideElements = Array.from(document.querySelectorAll(".slide"));
-        const slideCounter = document.getElementById("slideCounter");
-        const captionArea = document.getElementById("captionArea");
-        const captionText = document.getElementById("captionText");
-        const previousButton = document.getElementById("previousButton");
-        const playButton = document.getElementById("playButton");
-        const pauseButton = document.getElementById("pauseButton");
-        const nextButton = document.getElementById("nextButton");
-        const restartButton = document.getElementById("restartButton");
-        const captionsButton = document.getElementById("captionsButton");
-        const voiceSelect = document.getElementById("voiceSelect");
-        const statusText = document.getElementById("statusText");
+        const slideElements = Array.from(
+            document.querySelectorAll(".slide")
+        );
+
+        const slideCounter =
+            document.getElementById("slideCounter");
+
+        const captionArea =
+            document.getElementById("captionArea");
+
+        const captionText =
+            document.getElementById("captionText");
+
+        const previousButton =
+            document.getElementById("previousButton");
+
+        const playButton =
+            document.getElementById("playButton");
+
+        const pauseButton =
+            document.getElementById("pauseButton");
+
+        const nextButton =
+            document.getElementById("nextButton");
+
+        const restartButton =
+            document.getElementById("restartButton");
+
+        const captionsButton =
+            document.getElementById("captionsButton");
+
+        const statusText =
+            document.getElementById("statusText");
 
         let currentSlide = 0;
         let isPlaying = false;
         let isPaused = false;
         let captionsVisible = true;
-        let availableVoices = [];
         let activeUtterance = null;
+        let selectedVoice = null;
+        let voicesLoaded = false;
 
         const speechSupported =
             "speechSynthesis" in window &&
             "SpeechSynthesisUtterance" in window;
+
+        /*
+         * Preferred voice names vary by operating system and browser.
+         * The page checks these names in order and uses the first match.
+         *
+         * Students never see this list.
+         */
+        const preferredVoiceNames = [
+            "Google US English",
+            "Microsoft Aria Online (Natural) - English (United States)",
+            "Microsoft Jenny Online (Natural) - English (United States)",
+            "Microsoft Ava Online (Natural) - English (United States)",
+            "Samantha",
+            "Ava",
+            "Susan",
+            "Karen",
+            "Moira",
+            "Tessa",
+            "Victoria",
+            "Daniel",
+            "Alex"
+        ];
 
         function showSlide(index) {
             currentSlide = Math.max(
@@ -777,79 +778,98 @@
                 const isActive = slideIndex === currentSlide;
 
                 slide.classList.toggle("active", isActive);
-                slide.setAttribute("aria-hidden", String(!isActive));
+
+                slide.setAttribute(
+                    "aria-hidden",
+                    String(!isActive)
+                );
             });
 
             slideCounter.textContent =
                 `Slide ${currentSlide + 1} of ${tutorialSlides.length}`;
 
             captionText.textContent =
-                tutorialSlides[currentSlide].narration;
+                tutorialSlides[currentSlide].narration
+                    .replaceAll("I X L", "IXL");
 
-            previousButton.disabled = currentSlide === 0;
+            previousButton.disabled =
+                currentSlide === 0;
+
             nextButton.disabled =
                 currentSlide === tutorialSlides.length - 1;
         }
 
-        function loadVoices() {
+        function choosePreferredVoice() {
             if (!speechSupported) {
                 return;
             }
 
-            availableVoices = window.speechSynthesis.getVoices();
+            const voices =
+                window.speechSynthesis.getVoices();
 
-            const currentValue = voiceSelect.value;
+            if (!voices.length) {
+                return;
+            }
 
-            voiceSelect.innerHTML =
-                '<option value="">Default browser voice</option>';
+            voicesLoaded = true;
 
-            const englishVoices = availableVoices.filter((voice) =>
+            const englishVoices = voices.filter((voice) =>
                 voice.lang.toLowerCase().startsWith("en")
             );
 
-            englishVoices.forEach((voice) => {
-                const option = document.createElement("option");
+            for (const preferredName of preferredVoiceNames) {
+                const matchingVoice = englishVoices.find((voice) =>
+                    voice.name
+                        .toLowerCase()
+                        .includes(preferredName.toLowerCase())
+                );
 
-                option.value = voice.name;
-                option.textContent =
-                    `${voice.name} (${voice.lang})`;
+                if (matchingVoice) {
+                    selectedVoice = matchingVoice;
+                    return;
+                }
+            }
 
-                voiceSelect.appendChild(option);
+            const naturalVoice = englishVoices.find((voice) => {
+                const name = voice.name.toLowerCase();
+
+                return (
+                    name.includes("natural") ||
+                    name.includes("online") ||
+                    name.includes("enhanced") ||
+                    name.includes("premium")
+                );
             });
 
-            if (
-                currentValue &&
-                Array.from(voiceSelect.options).some(
-                    (option) => option.value === currentValue
-                )
-            ) {
-                voiceSelect.value = currentValue;
-            }
-        }
-
-        function getSelectedVoice() {
-            const selectedName = voiceSelect.value;
-
-            if (!selectedName) {
-                return null;
+            if (naturalVoice) {
+                selectedVoice = naturalVoice;
+                return;
             }
 
-            return (
-                availableVoices.find(
-                    (voice) => voice.name === selectedName
-                ) || null
+            const usEnglishVoice = englishVoices.find((voice) =>
+                voice.lang.toLowerCase() === "en-us"
             );
+
+            selectedVoice =
+                usEnglishVoice ||
+                englishVoices[0] ||
+                voices[0] ||
+                null;
         }
 
         function updateControls() {
-            playButton.disabled = isPlaying && !isPaused;
-            pauseButton.disabled = !isPlaying;
-            pauseButton.textContent = isPaused ? "Resume" : "Pause";
+            playButton.disabled =
+                isPlaying && !isPaused;
+
+            pauseButton.disabled =
+                !isPlaying;
+
+            pauseButton.textContent =
+                isPaused ? "Resume" : "Pause";
 
             if (!speechSupported) {
                 playButton.disabled = true;
                 pauseButton.disabled = true;
-                voiceSelect.disabled = true;
             }
         }
 
@@ -861,37 +881,55 @@
             activeUtterance = null;
             isPlaying = false;
             isPaused = false;
+
             statusText.textContent = "Stopped";
+
             updateControls();
+        }
+
+        function createUtterance(text) {
+            const utterance =
+                new SpeechSynthesisUtterance(text);
+
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
+
+            /*
+             * Slightly slower pacing generally sounds more conversational
+             * and is easier for students to follow.
+             */
+            utterance.rate = 0.92;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+
+            return utterance;
         }
 
         function speakCurrentSlide() {
             if (!speechSupported) {
                 statusText.textContent =
                     "Narration is not supported in this browser.";
+
                 return;
+            }
+
+            if (!voicesLoaded) {
+                choosePreferredVoice();
             }
 
             window.speechSynthesis.cancel();
 
-            activeUtterance = new SpeechSynthesisUtterance(
+            activeUtterance = createUtterance(
                 tutorialSlides[currentSlide].narration
             );
-
-            const selectedVoice = getSelectedVoice();
-
-            if (selectedVoice) {
-                activeUtterance.voice = selectedVoice;
-            }
-
-            activeUtterance.rate = 0.96;
-            activeUtterance.pitch = 1;
-            activeUtterance.volume = 1;
 
             activeUtterance.onstart = () => {
                 isPlaying = true;
                 isPaused = false;
+
                 statusText.textContent = "Playing";
+
                 updateControls();
             };
 
@@ -902,36 +940,45 @@
                     return;
                 }
 
-                if (currentSlide < tutorialSlides.length - 1) {
+                if (
+                    currentSlide <
+                    tutorialSlides.length - 1
+                ) {
                     currentSlide += 1;
+
                     showSlide(currentSlide);
 
                     window.setTimeout(() => {
                         speakCurrentSlide();
-                    }, 600);
+                    }, 650);
                 } else {
                     isPlaying = false;
                     isPaused = false;
+
                     statusText.textContent = "Complete";
+
                     updateControls();
                 }
             };
 
             activeUtterance.onerror = (event) => {
-                /*
-                 * Browsers may report "interrupted" when the user clicks
-                 * Next, Previous, Restart, or Pause. That is expected.
-                 */
                 if (
                     event.error !== "interrupted" &&
                     event.error !== "canceled"
                 ) {
-                    console.error("Speech synthesis error:", event.error);
-                    statusText.textContent = "Narration error";
+                    console.error(
+                        "Speech synthesis error:",
+                        event.error
+                    );
+
+                    statusText.textContent =
+                        "Narration error";
                 }
             };
 
-            window.speechSynthesis.speak(activeUtterance);
+            window.speechSynthesis.speak(
+                activeUtterance
+            );
         }
 
         function playTutorial() {
@@ -939,39 +986,58 @@
                 return;
             }
 
+            choosePreferredVoice();
+
             if (isPaused) {
                 window.speechSynthesis.resume();
+
                 isPaused = false;
+
                 statusText.textContent = "Playing";
+
                 updateControls();
+
                 return;
             }
 
             isPlaying = true;
+
             showSlide(currentSlide);
+
             speakCurrentSlide();
         }
 
         function togglePause() {
-            if (!speechSupported || !isPlaying) {
+            if (
+                !speechSupported ||
+                !isPlaying
+            ) {
                 return;
             }
 
             if (isPaused) {
                 window.speechSynthesis.resume();
+
                 isPaused = false;
+
                 statusText.textContent = "Playing";
             } else {
                 window.speechSynthesis.pause();
+
                 isPaused = true;
+
                 statusText.textContent = "Paused";
             }
 
             updateControls();
         }
 
-        function goToSlide(index, continuePlaying = false) {
-            const wasPlaying = continuePlaying && isPlaying;
+        function goToSlide(
+            index,
+            continuePlaying = false
+        ) {
+            const wasPlaying =
+                continuePlaying && isPlaying;
 
             if (speechSupported) {
                 window.speechSynthesis.cancel();
@@ -991,6 +1057,7 @@
                 }, 250);
             } else {
                 statusText.textContent = "Ready";
+
                 updateControls();
             }
         }
@@ -1005,7 +1072,9 @@
             isPaused = false;
 
             showSlide(currentSlide);
+
             statusText.textContent = "Playing";
+
             updateControls();
 
             window.setTimeout(() => {
@@ -1016,72 +1085,111 @@
         function toggleCaptions() {
             captionsVisible = !captionsVisible;
 
-            captionArea.hidden = !captionsVisible;
+            captionArea.hidden =
+                !captionsVisible;
+
             captionsButton.textContent =
-                captionsVisible ? "Hide Captions" : "Show Captions";
+                captionsVisible
+                    ? "Hide Captions"
+                    : "Show Captions";
+
             captionsButton.setAttribute(
                 "aria-pressed",
                 String(captionsVisible)
             );
         }
 
-        playButton.addEventListener("click", playTutorial);
-        pauseButton.addEventListener("click", togglePause);
-        restartButton.addEventListener("click", restartTutorial);
-        captionsButton.addEventListener("click", toggleCaptions);
+        playButton.addEventListener(
+            "click",
+            playTutorial
+        );
 
-        previousButton.addEventListener("click", () => {
-            goToSlide(currentSlide - 1, isPlaying);
-        });
+        pauseButton.addEventListener(
+            "click",
+            togglePause
+        );
 
-        nextButton.addEventListener("click", () => {
-            goToSlide(currentSlide + 1, isPlaying);
-        });
+        restartButton.addEventListener(
+            "click",
+            restartTutorial
+        );
 
-        voiceSelect.addEventListener("change", () => {
-            if (isPlaying) {
-                goToSlide(currentSlide, true);
+        captionsButton.addEventListener(
+            "click",
+            toggleCaptions
+        );
+
+        previousButton.addEventListener(
+            "click",
+            () => {
+                goToSlide(
+                    currentSlide - 1,
+                    isPlaying
+                );
             }
-        });
+        );
 
-        document.addEventListener("keydown", (event) => {
-            const targetTag = event.target.tagName.toLowerCase();
-
-            if (targetTag === "select" || targetTag === "button") {
-                return;
+        nextButton.addEventListener(
+            "click",
+            () => {
+                goToSlide(
+                    currentSlide + 1,
+                    isPlaying
+                );
             }
+        );
 
-            if (event.key === "ArrowRight") {
-                goToSlide(currentSlide + 1, isPlaying);
-            }
+        document.addEventListener(
+            "keydown",
+            (event) => {
+                const targetTag =
+                    event.target.tagName.toLowerCase();
 
-            if (event.key === "ArrowLeft") {
-                goToSlide(currentSlide - 1, isPlaying);
-            }
+                if (targetTag === "button") {
+                    return;
+                }
 
-            if (event.code === "Space") {
-                event.preventDefault();
+                if (event.key === "ArrowRight") {
+                    goToSlide(
+                        currentSlide + 1,
+                        isPlaying
+                    );
+                }
 
-                if (isPlaying) {
-                    togglePause();
-                } else {
-                    playTutorial();
+                if (event.key === "ArrowLeft") {
+                    goToSlide(
+                        currentSlide - 1,
+                        isPlaying
+                    );
+                }
+
+                if (event.code === "Space") {
+                    event.preventDefault();
+
+                    if (isPlaying) {
+                        togglePause();
+                    } else {
+                        playTutorial();
+                    }
                 }
             }
-        });
+        );
 
-        window.addEventListener("beforeunload", () => {
-            if (speechSupported) {
-                window.speechSynthesis.cancel();
+        window.addEventListener(
+            "beforeunload",
+            () => {
+                if (speechSupported) {
+                    window.speechSynthesis.cancel();
+                }
             }
-        });
+        );
 
         if (speechSupported) {
-            loadVoices();
+            choosePreferredVoice();
 
             window.speechSynthesis.addEventListener(
                 "voiceschanged",
-                loadVoices
+                choosePreferredVoice
             );
         } else {
             statusText.textContent =
